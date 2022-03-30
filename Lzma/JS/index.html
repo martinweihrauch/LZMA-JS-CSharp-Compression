@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+
+        <h1>LZMA Test</h1>
+        <p>My first paragraph.</p>
+        <button id="openfile">Open file to decompress</button>
+        <script src="lib/lzma-c-min.js"></script>
+        <script src="lib/lzma-d-min.js"></script>
+        <script src="lib/lzma_worker-min.js"></script>
+        <script src="lib/lzma-min.js"></script>
+
+        <script>
+            var openfile = document.getElementById("openfile");
+            openfile.addEventListener("click", function () {
+                decompress();
+            });
+
+            function decompress() {
+                /// First, let's compress it.
+                var compression_mode = 1,
+                    my_lzma = new LZMA();
+
+                my_lzma.compress("This is a test", compression_mode, function on_compress_complete(result) {
+                    alert("Compressed: " + result);
+
+                    /// Now, let's try to decompress it to make sure it works both ways.
+                    my_lzma.decompress(result, function on_decompress_complete(result) {
+                        alert("Decompressed: " + result);
+                    }, function on_decompress_progress_update(percent) {
+                        /// Decompressing progress code goes here.
+                        document.title = "Decompressing: " + (percent * 100) + "%";
+                    });
+                }, function on_compress_progress_update(percent) {
+                    /// Compressing progress code goes here.
+                    document.title = "Compressing: " + (percent * 100) + "%";
+                });
+            }
+
+        </script>
+
+    </body>
+</html> 
